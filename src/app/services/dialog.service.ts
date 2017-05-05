@@ -20,7 +20,7 @@ export class DialogService {
     dialogRef.componentInstance.message = message;
     setTimeout(() => {
       dialogRef.close();
-    }, 700);
+    }, 1500);
     return dialogRef.afterClosed();
   }
 

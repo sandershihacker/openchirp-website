@@ -22,7 +22,7 @@ export class DeviceComponent {
   successMessage: string = "";
   deviceTypes: Array<string> = ["LORA", "TWIST", "FIREFLY", "BOSCH_XDK"];
   services: Array<Object> = [];
-
+  transducers: Array<Object> = [];
   // New Transducer
   t_name: string = "";
   t_unit: string = "";
@@ -57,12 +57,17 @@ export class DeviceComponent {
       .subscribe(
         result => {
           this.device = result;
+          //TODO: FIx the hackish code below
           var serviceIds = this.device.linked_services.map((x: any) => x.service_id);
-          for (var i = 0; i < serviceIds.length; i++) {
-            this.userService.getServiceByID(serviceIds[i]).subscribe(
-              res => this.services.push(res)
-            );
-          }
+          this.deviceService.getDeviceTransducers(this.device._id).subscribe(
+            out => {
+              this.device.transducers = out;
+              for (var i = 0; i < serviceIds.length; i++) {
+                this.userService.getServiceByID(serviceIds[i]).subscribe(
+                  res => this.services.push(res)
+              );
+            }
+          });
         },
         error => this.router.navigate(['/home'])
       );

@@ -6,6 +6,7 @@ import { Location } from '../../models/location';
 import { Device } from '../../models/device';
 import { TreeNodeComponent } from '../locationtree/tree.component';
 import { Router } from '@angular/router';
+import { Configuration } from '../../config';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,9 +21,11 @@ export class DashboardComponent implements OnInit {
   errorMessage: string;
   devices: Array<Device> = [];
   newLocationParent: Location = null;
+  logout_url: string; 
 
-  constructor(private locationService: LocationService, private userService: UserService, private router: Router) {
+  constructor(private locationService: LocationService, private userService: UserService, private config: Configuration, private router: Router) {
     this.rootLocation = null;
+     this.logout_url = config.logout_url;
   }
 
   ngOnInit() {
@@ -30,7 +33,7 @@ export class DashboardComponent implements OnInit {
       result => {
         this.username = result.name || result.email || "";
         this.locationService.getRootLocation().subscribe(
-          res => this.rootLocation = (result[0]),
+          res => this.rootLocation = (res[0]),
           err => this.errorMessage = err.message
         );
       },
